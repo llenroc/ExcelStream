@@ -28,10 +28,13 @@
 
 	internal static class Uris
 	{
-		public static readonly Uri Sheet11 = new Uri("/xl/worksheets/sheet1.xml", UriKind.Relative);
+		public static readonly Uri Sheet1 = new Uri("/xl/worksheets/sheet1.xml", UriKind.Relative);
 		public static readonly Uri SharedStrings = new Uri("/xl/sharedStrings.xml", UriKind.Relative);
 		public static readonly Uri Workbook = new Uri("/xl/workbook.xml", UriKind.Relative);
 		public static readonly Uri Theme = new Uri("/xl/theme/theme1.xml", UriKind.Relative);
 		public static readonly Uri Styles = new Uri("/xl/styles.xml", UriKind.Relative);
+
+		public static readonly Uri RootRelationship = new Uri("/_rels/.rels", UriKind.Relative);
+		public static readonly Uri WorkbookRelationship = new Uri("/xl/_rels/workbook.xml.rels", UriKind.Relative);
 	}
 }

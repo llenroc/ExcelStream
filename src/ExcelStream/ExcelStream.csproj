@@ -42,16 +42,34 @@
     <Compile Include="Constants.cs" />
     <Compile Include="ExcelWriter.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="FileResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FileResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\CustomDictionary.xml">
       <Link>CustomDictionary.xml</Link>
     </Content>
+    <None Include="Resources\rels" />
+    <None Include="Resources\workbook.xml" />
+    <None Include="Resources\styles.xml" />
+    <None Include="Resources\theme1.xml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FileResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FileResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\workbook.xml.rels" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
