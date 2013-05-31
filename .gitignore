@@ -1,0 +1,13 @@
+obj
+Bin
+bin
+output
+publish
+*.user
+*.suo
+_ReSharper.*
+*.ReSharper*
+*.Cache
+*.cache
+~$*
+packages
