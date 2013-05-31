@@ -80,6 +80,8 @@
 			this.sharedStrings = rows > 0 ? new Dictionary<string, int>(rows) : new Dictionary<string, int>();
 			this.outputPackage = Package.Open(outputStream, FileMode.Create);
 
+			this.WritePreamble();
+
 			this.worksheetPart = this.outputPackage.CreatePart(Uris.Sheet1, MimeTypes.Worksheet, CompressionOption.Maximum);
 			this.sharedStringsPart = this.outputPackage.CreatePart(Uris.SharedStrings, MimeTypes.SharedStrings, CompressionOption.Maximum);
 
@@ -88,8 +90,6 @@
 
 			this.worksheetWriter.Write(Constants.WorksheetPrefix);
 			this.sharedStringsWriter.Write(Constants.SharedStringsPrefix);
-
-			this.WritePreamble();
 		}
 		private void WritePreamble()
 		{
@@ -97,7 +97,7 @@
 			this.WritePart(Uris.Theme, FileResources.theme1, MimeTypes.Theme);
 			this.WritePart(Uris.Workbook, FileResources.workbook, MimeTypes.Workbook);
 
-			this.WritePart(Uris.RootRelationship, FileResources.rels, "application/octet-stream");
+			this.WritePart(Uris.RootRelationship, FileResources.rels, "application/vnd.openxmlformats-package.relationships+xml");
 			this.WritePart(Uris.WorkbookRelationship, FileResources.workbook_xml_rels, "application/octet-stream");
 		}
 		private void WritePart(Uri location, string content, string mimeType)
