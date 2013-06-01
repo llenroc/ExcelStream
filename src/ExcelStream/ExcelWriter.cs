@@ -116,7 +116,7 @@
 			this.zipStream.TryDispose();
 			this.worksheetWriter.TryDispose();
 
-			if (this.disposeOutputStream)
+			if (!this.leaveOutputStreamOpen)
 				this.outputStream.TryDispose();
 
 			this.stringBuilder.Clear();
@@ -124,10 +124,10 @@
 			this.insertionOrder.Clear();
 		}
 
-		public ExcelWriter(string outputPath) : this(File.Open(outputPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None), true)
+		public ExcelWriter(string outputPath) : this(File.Open(outputPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None), false)
 		{
 		}
-		public ExcelWriter(Stream outputStream, bool dispose = false)
+		public ExcelWriter(Stream outputStream, bool leaveOpen = true)
 		{
 			if (outputStream == null)
 				throw new ArgumentNullException("outputStream");
@@ -137,7 +137,7 @@
 
 			try
 			{
-				this.disposeOutputStream = dispose;
+				this.leaveOutputStreamOpen = leaveOpen;
 				this.outputStream = outputStream;
 				this.zipStream = new ZipOutputStream(outputStream, true)
 				{
@@ -176,7 +176,7 @@
 		private readonly StringBuilder stringBuilder = new StringBuilder();
 		private readonly Dictionary<string, int> sharedStrings = new Dictionary<string, int>(1024 * 1024);
 		private readonly List<string> insertionOrder = new List<string>(1024 * 1024);
-		private readonly bool disposeOutputStream;
+		private readonly bool leaveOutputStreamOpen;
 		private readonly Stream outputStream;
 		private readonly ZipOutputStream zipStream;
 		private readonly StreamWriter worksheetWriter;
