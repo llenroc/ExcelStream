@@ -7,7 +7,7 @@
 	{
 		public static void Main()
 		{
-			var writer = new XmlWriter("c:/" + DateTime.UtcNow.Ticks + ".xlsx");
+			var writer = new ExcelWriter("c:/" + DateTime.UtcNow.Ticks + ".xlsx");
 			var cells = new string[11];
 
 			for (var i = 0; i < 1001; i++)

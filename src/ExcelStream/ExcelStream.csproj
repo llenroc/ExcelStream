@@ -42,8 +42,9 @@
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Constants.cs" />
-    <Compile Include="XmlWriter.cs" />
+    <Compile Include="ExcelWriter.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="IExcelWriter.cs" />
     <Compile Include="Metadata.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
