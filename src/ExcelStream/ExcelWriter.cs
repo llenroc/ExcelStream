@@ -19,7 +19,7 @@
 
 			this.stringBuilder.Clear();
 
-			this.AppendRow(values ?? new string[0], ++this.row); // 1-based row
+			this.AppendRow(values ?? new string[0], ++this.maxRow); // 1-based row
 			this.FlushRow();
 		}
 		private void AppendRow(string[] values, int row)
@@ -40,7 +40,7 @@
 				this.insertionOrder.Add(value);
 			}
 
-			this.stringBuilder.AppendFormat(Formats.Cell, (column + 1).ToColumnNumber(), this.row, sharedStringIndex);
+			this.stringBuilder.AppendFormat(Formats.Cell, (column + 1).ToColumnNumber(), this.maxRow, sharedStringIndex);
 		}
 		private void FlushRow()
 		{
@@ -62,13 +62,12 @@
 			this.WriteSharedStrings();
 			this.WriteMetadata();
 
-			this.Clear();
+			this.Close();
 		}
 		private StreamWriter WriteWorksheetHeader()
 		{
 			this.zipStream.PutNextEntry(Paths.Sheet1);
-			var outputStream = new IndisposableStream(this.zipStream);
-			var writer = new StreamWriter(outputStream, DefaultEncoding);
+			var writer = new StreamWriter(new IndisposableStream(this.zipStream), DefaultEncoding);
 			writer.Write(Constants.WorksheetHeader);
 			return writer;
 		}
@@ -106,20 +105,23 @@
 			this.zipStream.PutNextEntry(filename);
 			this.zipStream.Write(contents, 0, contents.Length);
 		}
-		private void Clear()
+		private void Close()
 		{
 			this.zipStream.TryDispose();
 			this.worksheetWriter.TryDispose();
+
+			if (this.disposeOutputStream)
+				this.outputStream.TryDispose();
 
 			this.stringBuilder.Clear();
 			this.sharedStrings.Clear();
 			this.insertionOrder.Clear();
 		}
 
-		public ExcelWriter(string outputPath) : this(File.Open(outputPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
+		public ExcelWriter(string outputPath) : this(File.Open(outputPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None), true)
 		{
 		}
-		public ExcelWriter(Stream outputStream)
+		public ExcelWriter(Stream outputStream, bool dispose = false)
 		{
 			if (outputStream == null)
 				throw new ArgumentNullException("outputStream");
@@ -129,6 +131,8 @@
 
 			try
 			{
+				this.disposeOutputStream = dispose;
+				this.outputStream = outputStream;
 				this.zipStream = new ZipOutputStream(outputStream, true)
 				{
 					CompressionLevel = CompressionLevel.Level9,
@@ -159,17 +163,19 @@
 				return;
 
 			this.disposed = true;
-			this.Clear();
+			this.Close();
 		}
 
 		private static readonly Encoding DefaultEncoding = new UTF8Encoding(true);
 		private readonly StringBuilder stringBuilder = new StringBuilder();
 		private readonly Dictionary<string, int> sharedStrings = new Dictionary<string, int>(1024 * 1024);
 		private readonly List<string> insertionOrder = new List<string>(1024 * 1024);
+		private readonly bool disposeOutputStream;
+		private readonly Stream outputStream;
 		private readonly ZipOutputStream zipStream;
 		private readonly StreamWriter worksheetWriter;
 		private bool saved;
 		private bool disposed;
-		private int row;
+		private int maxRow;
 	}
 }
