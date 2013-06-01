@@ -55,16 +55,16 @@
     <Content Include="..\CustomDictionary.xml">
       <Link>Properties\CustomDictionary.xml</Link>
     </Content>
-    <None Include="Resources\[Content_Types].xml" />
     <None Include="packages.config" />
+    <None Include="Resources\[Content_Types].xml" />
     <None Include="Resources\rels" />
     <None Include="Resources\workbook.xml" />
     <None Include="Resources\styles.xml" />
     <None Include="Resources\theme1.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="Ionic.Zip.Reduced">
+      <HintPath>..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

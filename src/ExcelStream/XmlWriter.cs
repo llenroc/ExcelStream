@@ -4,7 +4,8 @@
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Text;
-	using ICSharpCode.SharpZipLib.Zip;
+	using Ionic.Zip;
+	using Ionic.Zlib;
 
 	public class XmlWriter : IDisposable
 	{
@@ -68,8 +69,7 @@
 		}
 		private StreamWriter WriteWorksheetHeader()
 		{
-			this.zipStream.PutNextEntry(new ZipEntry(Paths.Sheet1));
-
+			this.zipStream.PutNextEntry(Paths.Sheet1);
 			var outputStream = new IndisposableStream(this.zipStream);
 			var writer = new StreamWriter(outputStream, DefaultEncoding);
 			writer.Write(Constants.WorksheetHeader);
@@ -79,11 +79,10 @@
 		{
 			this.worksheetWriter.Write(Constants.WorksheetFooter);
 			this.worksheetWriter.TryDispose();
-			this.zipStream.CloseEntry();
 		}
 		private void WriteSharedStrings()
 		{
-			this.zipStream.PutNextEntry(new ZipEntry(Paths.SharedStrings));
+			this.zipStream.PutNextEntry(Paths.SharedStrings);
 			using (var writer = new StreamWriter(new IndisposableStream(this.zipStream), DefaultEncoding))
 			{
 				writer.Write(Constants.SharedStringsHeader);
@@ -95,7 +94,6 @@
 				}
 				writer.Write(Constants.SharedStringsFooter);
 			}
-			this.zipStream.CloseEntry();
 		}
 		private void WriteMetadata()
 		{
@@ -108,9 +106,8 @@
 		}
 		private void WriteMetadata(string filename, byte[] contents)
 		{
-			this.zipStream.PutNextEntry(new ZipEntry(filename));
+			this.zipStream.PutNextEntry(filename);
 			this.zipStream.Write(contents, 0, contents.Length);
-			this.zipStream.CloseEntry();
 		}
 
 		public XmlWriter(string outputPath) : this(File.Open(outputPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
@@ -129,9 +126,12 @@
 				this.sharedStrings = new Dictionary<string, int>();
 				this.insertionOrder = new List<string>();
 
-				outputStream = new BufferedStream(outputStream, 1024 * 1024);
-				outputStream = new IndisposableStream(outputStream);
-				this.zipStream = new ZipOutputStream(outputStream, 1024 * 1024);
+				this.zipStream = new ZipOutputStream(outputStream, true)
+				{
+					CompressionLevel = CompressionLevel.Level9,
+					CompressionMethod = CompressionMethod.Deflate,
+				};
+
 				this.worksheetWriter = this.WriteWorksheetHeader();
 			}
 			catch
