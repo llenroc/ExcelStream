@@ -7,11 +7,19 @@
 	{
 		public static void Main()
 		{
-			var streamer = new ExcelWriter("c:/" + Guid.NewGuid() + ".zip");
-			streamer.Write(new[] { "Hello", "World" });
-			streamer.Write(new[] { "second", "row" });
-			streamer.Save();
-			streamer.Dispose();
+			var writer = new XmlWriter("c:/" + Guid.NewGuid() + ".xlsx");
+			var cells = new string[11];
+
+			for (var i = 0; i < 10001; i++)
+			{
+				for (var x = 0; x < cells.Length; x++)
+					cells[x] = (i * x).ToString();
+
+				writer.AppendRow(cells);
+			}
+				
+			writer.Save();
+			writer.Dispose();
 		}
 	}
 }

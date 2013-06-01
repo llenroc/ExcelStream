@@ -11,6 +11,8 @@
     <AssemblyName>ExcelStream</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,45 +33,50 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs">
-      <Link>GlobalAssemblyInfo.cs</Link>
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\GlobalSuppressions.cs">
-      <Link>GlobalSuppressions.cs</Link>
+      <Link>Properties\GlobalSuppressions.cs</Link>
     </Compile>
     <Compile Include="..\VersionAssemblyInfo.cs">
-      <Link>VersionAssemblyInfo.cs</Link>
+      <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Constants.cs" />
-    <Compile Include="ExcelWriter.cs" />
+    <Compile Include="XmlWriter.cs" />
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="FileResources.Designer.cs">
+    <Compile Include="Metadata.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>FileResources.resx</DependentUpon>
+      <DependentUpon>Metadata.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\CustomDictionary.xml">
-      <Link>CustomDictionary.xml</Link>
+      <Link>Properties\CustomDictionary.xml</Link>
     </Content>
+    <None Include="Resources\[Content_Types].xml" />
+    <None Include="packages.config" />
     <None Include="Resources\rels" />
     <None Include="Resources\workbook.xml" />
     <None Include="Resources\styles.xml" />
     <None Include="Resources\theme1.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="FileResources.resx">
+    <EmbeddedResource Include="Metadata.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>FileResources.Designer.cs</LastGenOutput>
+      <LastGenOutput>Metadata.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\workbook.xml.rels" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>
