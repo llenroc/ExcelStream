@@ -93,17 +93,23 @@
 		}
 		private void WriteMetadata()
 		{
-			this.WriteMetadata(Paths.ContentTypes, Metadata.content_types);
-			this.WriteMetadata(Paths.RootRelationship, Metadata.rels);
-			this.WriteMetadata(Paths.Workbook, Metadata.workbook);
-			this.WriteMetadata(Paths.Styles, Metadata.styles);
-			this.WriteMetadata(Paths.Theme, Metadata.theme1);
-			this.WriteMetadata(Paths.WorkbookRelationship, Metadata.workbook_xml_rels);
-		}
-		private void WriteMetadata(string filename, byte[] contents)
-		{
-			this.zipStream.PutNextEntry(filename);
-			this.zipStream.Write(contents, 0, contents.Length);
+			using (var source = new MemoryStream(Metadata.metadata))
+			using (var unzipped = new ZipInputStream(source))
+			{
+				ZipEntry entry;
+				var buffer = new byte[1024 * 32]; // this is larger than the metadata file
+
+				while ((entry = unzipped.GetNextEntry()) != null)
+				{
+					if (entry.UncompressedSize == 0)
+						continue;
+
+					var size = (int)entry.UncompressedSize;
+					unzipped.Read(buffer, 0, size);
+					this.zipStream.PutNextEntry(entry.FileName);
+					this.zipStream.Write(buffer, 0, size);
+				}
+			}
 		}
 		private void Close()
 		{

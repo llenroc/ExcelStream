@@ -63,59 +63,9 @@ namespace ExcelStream {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] content_types {
+        internal static byte[] metadata {
             get {
-                object obj = ResourceManager.GetObject("content_types", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] rels {
-            get {
-                object obj = ResourceManager.GetObject("rels", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] styles {
-            get {
-                object obj = ResourceManager.GetObject("styles", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] theme1 {
-            get {
-                object obj = ResourceManager.GetObject("theme1", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] workbook {
-            get {
-                object obj = ResourceManager.GetObject("workbook", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] workbook_xml_rels {
-            get {
-                object obj = ResourceManager.GetObject("workbook_xml_rels", resourceCulture);
+                object obj = ResourceManager.GetObject("metadata", resourceCulture);
                 return ((byte[])(obj));
             }
         }

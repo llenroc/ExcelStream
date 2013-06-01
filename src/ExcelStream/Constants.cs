@@ -20,12 +20,5 @@
 	{
 		public const string Sheet1 = "xl/worksheets/sheet1.xml";
 		public const string SharedStrings = "xl/sharedStrings.xml";
-		public const string Workbook = "xl/workbook.xml";
-		public const string Theme = "xl/theme/theme1.xml";
-		public const string Styles = "xl/styles.xml";
-
-		public const string ContentTypes = "[Content_Types].xml";
-		public const string RootRelationship = "_rels/.rels";
-		public const string WorkbookRelationship = "xl/_rels/workbook.xml.rels";
 	}
 }
