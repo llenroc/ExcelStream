@@ -17,19 +17,16 @@
 			if (this.saved)
 				throw new InvalidOperationException("Unable to write after saving.");
 
-			this.stringBuilder.Clear();
-
 			this.AppendRow(values ?? new string[0], ++this.maxRow); // 1-based row
-			this.FlushRow();
 		}
 		private void AppendRow(string[] values, int row)
 		{
-			this.stringBuilder.AppendFormat(Formats.RowPrefix, row);
+			this.worksheetWriter.Write(Formats.RowPrefix, row);
 
 			for (var i = 0; i < values.Length; i++)
 				this.AppendColumn(values[i], i);
 
-			this.stringBuilder.Append(Constants.RowSuffix);
+			this.worksheetWriter.Write(Constants.RowSuffix);
 		}
 		private void AppendColumn(string value, int column)
 		{
@@ -40,12 +37,7 @@
 				this.insertionOrder.Add(value);
 			}
 
-			this.stringBuilder.AppendFormat(Formats.Cell, (column + 1).ToColumnNumber(), this.maxRow, sharedStringIndex);
-		}
-		private void FlushRow()
-		{
-			for (var i = 0; i < this.stringBuilder.Length; i++)
-				this.worksheetWriter.Write(this.stringBuilder[i]);
+			this.worksheetWriter.Write(Formats.Cell, (column + 1).ToColumnNumber(), this.maxRow, sharedStringIndex);
 		}
 
 		public void Save()
@@ -119,7 +111,6 @@
 			if (!this.leaveOutputStreamOpen)
 				this.outputStream.TryDispose();
 
-			this.stringBuilder.Clear();
 			this.sharedStrings.Clear();
 			this.insertionOrder.Clear();
 		}
@@ -173,7 +164,6 @@
 		}
 
 		private static readonly Encoding DefaultEncoding = new UTF8Encoding(true);
-		private readonly StringBuilder stringBuilder = new StringBuilder();
 		private readonly Dictionary<string, int> sharedStrings = new Dictionary<string, int>(1024 * 1024);
 		private readonly List<string> insertionOrder = new List<string>(1024 * 1024);
 		private readonly bool leaveOutputStreamOpen;
