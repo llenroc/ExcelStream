@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>ExcelStream</id>
+    <version>1.0.0</version>
+    <title>ExcelStream</title>
+    <authors>SmartyStreets</authors>
+    <owners>SmartyStreets</owners>
+    <projectUrl>https://github.com/smartystreets/ExcelStream</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Facilitates streaming simple string values to XLSX (Excel 2007+ files)</description>
+    <language>en-US</language>
+	<tags>Excel, Excel 2007, Excel 2010, Excel 2013, xlsx, OpenXML, Open XML, OOXML, DocumentFormat.OpenXml</tags>
+  </metadata>
+  <files>
+    <file src="..\..\publish\bin\*" target="lib\net40" />
+    <file src="..\ExcelStream\**\*.cs" target="src" />
+  </files>
+</package>
