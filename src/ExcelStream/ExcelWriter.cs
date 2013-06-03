@@ -30,6 +30,8 @@
 		}
 		private void AppendColumn(string value, int column)
 		{
+			value = value ?? string.Empty;
+
 			int sharedStringIndex;
 			if (!this.sharedStrings.TryGetValue(value, out sharedStringIndex))
 			{

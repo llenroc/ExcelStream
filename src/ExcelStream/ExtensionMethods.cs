@@ -9,7 +9,7 @@
 	{
 		public static string Sanitize(this string value)
 		{
-			return SecurityElement.Escape(value ?? string.Empty);
+			return SecurityElement.Escape(value);
 		}
 		public static string ToColumnNumber(this int columnNumber)
 		{
