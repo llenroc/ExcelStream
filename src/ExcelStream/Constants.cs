@@ -12,7 +12,7 @@
 	}
 	internal static class Formats
 	{
-		public const string CellPrefix = "<c r=\"{0}{1}\" s=\"1\" t=\"str\"><v>"; // 0: column, 1: row
+		public const string CellPrefix = "<c r=\"{0}{1}\" t=\"str\"><v>"; // 0: column, 1: row
 	}
 	internal static class Paths
 	{
