@@ -3,7 +3,6 @@
 	using System;
 	using System.IO;
 	using System.Runtime.Remoting;
-	using System.Security;
 
 	internal static class ExtensionMethods
 	{
@@ -20,6 +19,20 @@
 			{
 				return resource;
 			}
+		}
+		public static string ToColumnNumber(this int columnNumber)
+		{
+			var dividend = columnNumber;
+			var columnName = string.Empty;
+
+			while (dividend > 0)
+			{
+				var modulo = (dividend - 1) % 26;
+				columnName = Convert.ToChar(65 + modulo) + columnName;
+				dividend = (dividend - modulo) / 26;
+			}
+
+			return columnName;
 		}
 	}
 

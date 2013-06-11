@@ -1,7 +1,6 @@
 ﻿namespace ExcelStream
 {
 	using System;
-	using System.Collections.Generic;
 	using System.IO;
 	using System.Security;
 	using System.Text;
@@ -18,6 +17,7 @@
 			if (this.saved)
 				throw new InvalidOperationException("Unable to write after saving.");
 
+			this.currentRow++;
 			this.WriteRow(values ?? new string[0]); // 1-based row
 		}
 		private void WriteRow(string[] values)
@@ -25,13 +25,13 @@
 			this.worksheetWriter.Write(Constants.RowPrefix);
 
 			for (var i = 0; i < values.Length; i++)
-				this.WriteColumn(values[i]);
+				this.WriteColumn(values[i], i);
 
 			this.worksheetWriter.Write(Constants.RowSuffix);
 		}
-		private void WriteColumn(string value)
+		private void WriteColumn(string value, int column)
 		{
-			this.worksheetWriter.Write(Constants.CellPrefix);
+			this.worksheetWriter.Write(Formats.CellPrefix, (column + 1).ToColumnNumber(), this.currentRow);
 			this.worksheetWriter.Write(SecurityElement.Escape(value ?? string.Empty));
 			this.worksheetWriter.Write(Constants.CellSuffix);
 		}
@@ -147,5 +147,6 @@
 		private readonly StreamWriter worksheetWriter;
 		private bool saved;
 		private bool disposed;
+		private int currentRow;
 	}
 }
