@@ -109,7 +109,7 @@
 				this.outputStream = outputStream;
 				this.zipStream = new ZipOutputStream(outputStream, true)
 				{
-					CompressionLevel = CompressionLevel.Level9,
+					CompressionLevel = CompressionLevel.Level4,
 					CompressionMethod = CompressionMethod.Deflate,
 				};
 
