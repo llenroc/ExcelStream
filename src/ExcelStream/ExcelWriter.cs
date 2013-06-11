@@ -17,7 +17,7 @@
 			if (this.saved)
 				throw new InvalidOperationException("Unable to write after saving.");
 
-			this.currentRow++;
+			this.rowSequence++;
 			this.WriteRow(values ?? new string[0]); // 1-based row
 		}
 		private void WriteRow(string[] values)
@@ -25,13 +25,13 @@
 			this.worksheetWriter.Write(Constants.RowPrefix);
 
 			for (var i = 0; i < values.Length; i++)
-				this.WriteColumn(values[i], i);
+				this.WriteColumn(values[i], i + 1);
 
 			this.worksheetWriter.Write(Constants.RowSuffix);
 		}
-		private void WriteColumn(string value, int column)
+		private void WriteColumn(string value, int cellSequence)
 		{
-			this.worksheetWriter.Write(Formats.CellPrefix, (column + 1).ToColumnNumber(), this.currentRow);
+			this.worksheetWriter.Write(Formats.CellPrefix, cellSequence.ToColumnNumber(), this.rowSequence);
 			this.worksheetWriter.Write(SecurityElement.Escape(value ?? string.Empty));
 			this.worksheetWriter.Write(Constants.CellSuffix);
 		}
@@ -147,6 +147,6 @@
 		private readonly StreamWriter worksheetWriter;
 		private bool saved;
 		private bool disposed;
-		private int currentRow;
+		private int rowSequence;
 	}
 }
