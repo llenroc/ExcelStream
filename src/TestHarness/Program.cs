@@ -13,7 +13,7 @@
 				var cells = new string[25];
 
 				writer.AppendRow(new[] { "Hello", "World!" });
-				for (var i = 0; i < 1000001; i++)
+				for (var i = 0; i < 101; i++)
 				{
 					if (i > 0 && i % 10000 == 0)
 					{

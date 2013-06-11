@@ -8,11 +8,11 @@
 		public const string RowPrefix = "<row>";
 		public const string RowSuffix = "</row>";
 
-		public const string CellSuffix = "</v></c>";
+		public const string CellSuffix = "</t></is></c>";
 	}
 	internal static class Formats
 	{
-		public const string CellPrefix = "<c r=\"{0}{1}\" t=\"str\"><v>"; // 0: column, 1: row
+		public const string CellPrefix = "<c r=\"{0}{1}\" t=\"inlineStr\"><is><t>"; // 0: column, 1: row
 	}
 	internal static class Paths
 	{
