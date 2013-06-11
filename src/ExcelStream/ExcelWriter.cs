@@ -1,8 +1,8 @@
 ﻿namespace ExcelStream
 {
 	using System;
-	using System.Collections.Generic;
 	using System.IO;
+	using System.Security;
 	using System.Text;
 	using Ionic.Zip;
 	using Ionic.Zlib;
@@ -17,29 +17,23 @@
 			if (this.saved)
 				throw new InvalidOperationException("Unable to write after saving.");
 
-			this.AppendRow(values ?? new string[0], ++this.maxRow); // 1-based row
+			this.rowSequence++;
+			this.WriteRow(values ?? new string[0]); // 1-based row
 		}
-		private void AppendRow(string[] values, int row)
+		private void WriteRow(string[] values)
 		{
-			this.worksheetWriter.Write(Formats.RowPrefix, row);
+			this.worksheetWriter.Write(Constants.RowPrefix);
 
 			for (var i = 0; i < values.Length; i++)
-				this.AppendColumn(values[i], i);
+				this.WriteColumn(values[i], i + 1);
 
 			this.worksheetWriter.Write(Constants.RowSuffix);
 		}
-		private void AppendColumn(string value, int column)
+		private void WriteColumn(string value, int cellSequence)
 		{
-			value = value ?? string.Empty;
-
-			int sharedStringIndex;
-			if (!this.sharedStrings.TryGetValue(value, out sharedStringIndex))
-			{
-				this.sharedStrings[value] = sharedStringIndex = this.sharedStrings.Count; // 0-based
-				this.insertionOrder.Add(value);
-			}
-
-			this.worksheetWriter.Write(Formats.Cell, (column + 1).ToColumnNumber(), this.maxRow, sharedStringIndex);
+			this.worksheetWriter.Write(Formats.CellPrefix, cellSequence.ToColumnNumber(), this.rowSequence);
+			this.worksheetWriter.Write(SecurityElement.Escape(value ?? string.Empty));
+			this.worksheetWriter.Write(Constants.CellSuffix);
 		}
 
 		public void Save()
@@ -53,7 +47,6 @@
 			this.saved = true;
 
 			this.WriteWorksheetFooter();
-			this.WriteSharedStrings();
 			this.WriteMetadata();
 
 			this.Close();
@@ -69,21 +62,6 @@
 		{
 			this.worksheetWriter.Write(Constants.WorksheetFooter);
 			this.worksheetWriter.TryDispose();
-		}
-		private void WriteSharedStrings()
-		{
-			this.zipStream.PutNextEntry(Paths.SharedStrings);
-			using (var writer = new StreamWriter(new IndisposableStream(this.zipStream), DefaultEncoding))
-			{
-				writer.Write(Constants.SharedStringsHeader);
-				for (var i = 0; i < this.insertionOrder.Count; i++)
-				{
-					writer.Write(Constants.SharedStringsItemPrefix);
-					writer.Write(this.insertionOrder[i].Sanitize());
-					writer.Write(Constants.SharedStringsItemSuffix);
-				}
-				writer.Write(Constants.SharedStringsFooter);
-			}
 		}
 		private void WriteMetadata()
 		{
@@ -112,9 +90,6 @@
 
 			if (!this.leaveOutputStreamOpen)
 				this.outputStream.TryDispose();
-
-			this.sharedStrings.Clear();
-			this.insertionOrder.Clear();
 		}
 
 		public ExcelWriter(string outputPath) : this(File.Open(outputPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None), false)
@@ -166,14 +141,12 @@
 		}
 
 		private static readonly Encoding DefaultEncoding = new UTF8Encoding(true);
-		private readonly Dictionary<string, int> sharedStrings = new Dictionary<string, int>(1024 * 1024);
-		private readonly List<string> insertionOrder = new List<string>(1024 * 1024);
 		private readonly bool leaveOutputStreamOpen;
 		private readonly Stream outputStream;
 		private readonly ZipOutputStream zipStream;
 		private readonly StreamWriter worksheetWriter;
 		private bool saved;
 		private bool disposed;
-		private int maxRow;
+		private int rowSequence;
 	}
 }

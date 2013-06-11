@@ -3,13 +3,22 @@
 	using System;
 	using System.IO;
 	using System.Runtime.Remoting;
-	using System.Security;
 
 	internal static class ExtensionMethods
 	{
-		public static string Sanitize(this string value)
+		public static IDisposable TryDispose(this IDisposable resource)
 		{
-			return SecurityElement.Escape(value);
+			try
+			{
+				if (resource != null)
+					resource.Dispose();
+
+				return null;
+			}
+			catch
+			{
+				return resource;
+			}
 		}
 		public static string ToColumnNumber(this int columnNumber)
 		{
@@ -24,20 +33,6 @@
 			}
 
 			return columnName;
-		}
-		public static IDisposable TryDispose(this IDisposable resource)
-		{
-			try
-			{
-				if (resource != null)
-					resource.Dispose();
-
-				return null;
-			}
-			catch
-			{
-				return resource;
-			}
 		}
 	}
 
